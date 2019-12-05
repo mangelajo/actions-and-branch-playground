@@ -10,12 +10,13 @@ jobs:
     - name: Create deploy key to push
       run: |
         echo '=================== Create deploy key to push ==================='
+        set -x
         mkdir $HOME/.ssh
         ssh-keyscan -t rsa github.com > $HOME/.ssh/known_hosts && \
         echo "${GIT_DEPLOY_KEY}" > $HOME/.ssh/id_rsa && \
         chmod 400 $HOME/.ssh/id_rsa
         git remote add origin-ssh ssh://git@github.com/submariner-io/actions-and-branch-playground.git
-        git fetch -a -v
+        git fetch -a -v origin-ssh
       env:
         GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
   
