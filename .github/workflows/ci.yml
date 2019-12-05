@@ -18,7 +18,8 @@ jobs:
       run: echo "The time was ${{ steps.hello.outputs.time }}"
   
     - uses: actions/checkout@v1
-    - uses: submariner-io/pr-brancher@master
+      
+    - uses: submariner-io/pr-brancher@v1
       with:
         git-deploy-key: "${{ secrets.GIT_DEPLOY_KEY }}"
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
