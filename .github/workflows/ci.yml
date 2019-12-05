@@ -11,5 +11,7 @@ jobs:
     - name: pr-brancher
       uses: submariner-io/pr-brancher@v1
       with:
-        ssh-key: "${{ secrets.GIT_DEPLOY_KEY }}"
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        ssh-key: ${{ secrets.GIT_DEPLOY_KEY }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
