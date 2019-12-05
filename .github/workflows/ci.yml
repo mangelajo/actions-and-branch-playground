@@ -18,38 +18,42 @@ jobs:
       run: echo "The time was ${{ steps.hello.outputs.time }}"
   
     - uses: actions/checkout@v1
+    - uses: submariner-io/pr-brancher@master
+      with:
+        git-deploy-key: ${{ secrets.GIT_DEPLOY_KEY }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Run a multi-line script
-      run: |
-        set -x
-        echo Add other actions to build,
-        echo test, and deploy your project.
-        env
-        ls -la
-        git status || true
-        cat $GITHUB_EVENT_PATH | python -m json.tool
-    - name: Create deploy key to push
-      run: |
-        echo '=================== Create deploy key to push ==================='
-        mkdir $HOME/.ssh
-        ssh-keyscan -t rsa github.com > $HOME/.ssh/known_hosts && \
-        echo "${GIT_DEPLOY_KEY}" > $HOME/.ssh/id_rsa && \
-        chmod 400 $HOME/.ssh/id_rsa
-      env:
-        GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
-
-    - name: Create branch based on PR
-      run: |
-        set -x
-        PR_NUM=$(echo $GITHUB_REF | cut -d / -f 3)
-        BRANCH_NAME="${GITHUB_ACTOR}/pr${PR_NUM}-${GITHUB_HEAD_REF}"
-        git fetch -a -v
-        git remote add submariner-io git@github.com:${GITHUB_DEPLOY_REPOSITORY}.git
-        git checkout remotes/origin/${GITHUB_HEAD_REF} -B $BRANCH_NAME
-        git push -f submariner-io $BRANCH_NAME
-        git branch -a -v
-      env:
-        GITHUB_DEPLOY_REPOSITORY: submariner-io/actions-and-branch-playground
+#    - name: Run a multi-line script
+#      run: |
+#        set -x
+#        echo Add other actions to build,
+#        echo test, and deploy your project.
+#        env
+#        ls -la
+#        git status || true
+#        cat $GITHUB_EVENT_PATH | python -m json.tool
+#    - name: Create deploy key to push
+#      run: |
+#        echo '=================== Create deploy key to push ==================='
+#        mkdir $HOME/.ssh
+#        ssh-keyscan -t rsa github.com > $HOME/.ssh/known_hosts && \
+#        echo "${GIT_DEPLOY_KEY}" > $HOME/.ssh/id_rsa && \
+#        chmod 400 $HOME/.ssh/id_rsa
+#      env:
+#        GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
+#
+#    - name: Create branch based on PR
+#      run: |
+#        set -x
+#        PR_NUM=$(echo $GITHUB_REF | cut -d / -f 3)
+#        BRANCH_NAME="${GITHUB_ACTOR}/pr${PR_NUM}-${GITHUB_HEAD_REF}"
+#        git fetch -a -v
+#        git remote add submariner-io git@github.com:${GITHUB_DEPLOY_REPOSITORY}.git
+#        git checkout remotes/origin/${GITHUB_HEAD_REF} -B $BRANCH_NAME
+#        git push -f submariner-io $BRANCH_NAME
+#        git branch -a -v
+#      env:
+#        GITHUB_DEPLOY_REPOSITORY: submariner-io/actions-and-branch-playground
         
         
         
