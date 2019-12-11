@@ -1,41 +1,41 @@
-name: CI-brancher
+#name: CI-brancher
+#
+#on: pull_request
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-18.04
+#    steps:
+#    - uses: actions/checkout@v1
 
-on: pull_request
-
-jobs:
-  build:
-    runs-on: ubuntu-18.04
-    steps:
-    - uses: actions/checkout@v1
-
-    - name: Create issue using REST API
-      run: |
-        curl --request POST \
-        --url https://api.github.com/repos/${{ github.repository }}/issues \
-        --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-        --header 'content-type: application/json' \
-        --data '{
-          "title": "Automated issue for commit: ${{ github.sha }}",
-          "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_."
-          }'
+#    - name: Create issue using REST API
+#      run: |
+#        curl --request POST \
+#        --url https://api.github.com/repos/${{ github.repository }}/issues \
+#        --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+#        --header 'content-type: application/json' \
+#        --data '{
+#          "title": "Automated issue for commit: ${{ github.sha }}",
+#          "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_."
+#          }'
           
-    - name: Create deploy key to push
-      run: |
-        echo '=================== Create deploy key to push ==================='
-        set -x
-        mkdir $HOME/.ssh
-        ssh-keyscan -t rsa github.com > $HOME/.ssh/known_hosts && \
-        echo "${GIT_DEPLOY_KEY}" > $HOME/.ssh/id_rsa && \
-        chmod 400 $HOME/.ssh/id_rsa
-        git remote add origin-ssh ssh://git@github.com/submariner-io/actions-and-branch-playground.git
-        git fetch -a -v origin-ssh
-      env:
-        GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
+#    - name: Create deploy key to push
+#      run: |
+#        echo '=================== Create deploy key to push ==================='
+#        set -x
+#        mkdir $HOME/.ssh
+#        ssh-keyscan -t rsa github.com > $HOME/.ssh/known_hosts && \
+#        echo "${GIT_DEPLOY_KEY}" > $HOME/.ssh/id_rsa && \
+#        chmod 400 $HOME/.ssh/id_rsa
+#        git remote add origin-ssh ssh://git@github.com/submariner-io/actions-and-branch-playground.git
+#        git fetch -a -v origin-ssh
+#      env:
+#        GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
   
-    - name: pr-brancher
-      uses: submariner-io/pr-brancher@v1
-      with:
-        ssh-key: ${{ secrets.GIT_DEPLOY_KEY }}
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-      env:
-        GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
+#    - name: pr-brancher
+#      uses: submariner-io/pr-brancher@v1
+#      with:
+#        ssh-key: ${{ secrets.GIT_DEPLOY_KEY }}
+#        repo-token: ${{ secrets.GITHUB_TOKEN }}
+#      env:
+#        GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
